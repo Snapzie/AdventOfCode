@@ -32,16 +32,16 @@ print(res)
 # Part 2.1
 from collections import defaultdict
 
-d = defaultdict(lambda: 0)
+d = defaultdict(int)
 with open('./input.txt','r') as f:
     for i,line in enumerate(f):
         winning,nums = line.split(': ')[1].split(' | ')
         nums = [int(n) for n in nums.split()]
         winning = [int(n) for n in winning.split()]
 
-        d[str(i)] = 1 + d[str(i)]
+        d[str(i)] += 1
         points = sum([n in winning for n in nums])
         for j in range(1,points+1):
-            d[str(i+j)] = d[str(i)] + d[str(i+j)]
+            d[str(i+j)] += d[str(i)]
 res = sum(d.values())
 print(res)
