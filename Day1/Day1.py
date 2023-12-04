@@ -34,7 +34,7 @@ def txt2Num(word):
         return word
 
 calVals = []
-with open('./input.csv','r') as f:
+with open('./input2.csv','r') as f:
     for line in f:
         print(line)
         matches = re.finditer(r'(?=(\d|one|two|three|four|five|six|seven|eight|nine))',line)
