@@ -62,18 +62,13 @@ print(min(dests))
 
 
 # Part 2
-seedsList = []
 keys = ['Dest','Source','Range']
-f = open('./input.txt').read().strip()
+f = open('./input2.txt').read().strip()
 for line in f.split('\n\n'):
     if line.startswith('seeds:'):
         seeds = [int(x) for x in line.split(': ')[1].split()]
-        seedpairs = zip(seeds[::2],seeds[1::2])
-        for start,end in seedpairs:
-            for i in range(start,start+end):
-                seedsList.append(i)
-        # seeds = [l for l in list(range(start,end)) for start,end in zip(seeds[::2],seeds[1::2])]
-        print(seedsList)
+        seedpairs = list(zip(seeds[::2],seeds[1::2]))
+        print(seedpairs)
     if line.startswith('seed-to-soil'):
         vals = [[int(x) for x in val] for val in [x.split() for x in line.split('\n')[1:]]]
         seed2Soil = [{k:v for k,v in zip(keys,val)} for val in vals]
@@ -98,36 +93,18 @@ for line in f.split('\n\n'):
 
 dests = []
 dicts = [humid2dest,temp2humid,light2temp,water2light,fert2water,soil2fert,seed2Soil]
-
-
-for idx in seedsList:
-    for dict in seed2Soil:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in soil2fert:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in fert2water:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in water2light:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in light2temp:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in temp2humid:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in humid2dest:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break    
-    dests.append(idx)
-print(min(dests))
+found = True
+count = 0
+# for idx in range(0,100):
+while found:
+    idx = count
+    for dictlist in dicts:
+        for dict in dictlist:
+            if dict['Dest'] <= idx <= dict['Dest']+dict['Range']:
+                idx = idx + (dict['Source'] - dict['Dest'])
+                break
+    for seed_start, seed_end in seedpairs:
+        if seed_start <= idx <= seed_start+seed_end:
+            print(count)
+            found = False
+    count += 1
