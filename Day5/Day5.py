@@ -1,5 +1,4 @@
-from collections import defaultdict
-
+# Part 1
 keys = ['Dest','Source','Range']
 f = open('./input.txt').read().strip()
 for line in f.split('\n\n'):
@@ -27,48 +26,25 @@ for line in f.split('\n\n'):
         vals = [[int(x) for x in val] for val in [x.split() for x in line.split('\n')[1:]]]
         humid2dest = [{k:v for k,v in zip(keys,val)} for val in vals]
 
+dicts =[seed2Soil,soil2fert,fert2water,water2light,light2temp,temp2humid,humid2dest]
 dests = []
 for idx in seeds:
-    for dict in seed2Soil:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in soil2fert:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in fert2water:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in water2light:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in light2temp:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in temp2humid:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break
-    for dict in humid2dest:
-        if dict['Source'] <= idx <= dict['Source']+dict['Range']:
-            idx = idx + (dict['Dest'] - dict['Source'])
-            break    
+    for dictList in dicts:
+        for dict in dictList:
+            if dict['Source'] <= idx <= dict['Source']+dict['Range']:
+                idx = idx + (dict['Dest'] - dict['Source'])
+                break
     dests.append(idx)
 print(min(dests))
 
 
 # Part 2
 keys = ['Dest','Source','Range']
-f = open('./input2.txt').read().strip()
+f = open('./input.txt').read().strip()
 for line in f.split('\n\n'):
     if line.startswith('seeds:'):
         seeds = [int(x) for x in line.split(': ')[1].split()]
         seedpairs = list(zip(seeds[::2],seeds[1::2]))
-        print(seedpairs)
     if line.startswith('seed-to-soil'):
         vals = [[int(x) for x in val] for val in [x.split() for x in line.split('\n')[1:]]]
         seed2Soil = [{k:v for k,v in zip(keys,val)} for val in vals]
@@ -100,11 +76,11 @@ while found:
     idx = count
     for dictlist in dicts:
         for dict in dictlist:
-            if dict['Dest'] <= idx <= dict['Dest']+dict['Range']:
+            if dict['Dest'] <= idx < dict['Dest']+dict['Range']:
                 idx = idx + (dict['Source'] - dict['Dest'])
                 break
     for seed_start, seed_end in seedpairs:
-        if seed_start <= idx <= seed_start+seed_end:
+        if seed_start <= idx < seed_start+seed_end:
             print(count)
             found = False
     count += 1
