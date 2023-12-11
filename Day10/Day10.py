@@ -59,12 +59,13 @@ def replaceS(y,x,d,map):
         matches.append((k,counter))
     return sorted(matches,key=lambda x: x[1])[-1][0]
 
-f = open('./input2.txt','r').read().strip()
+f = open('./input.txt','r').read().strip()
 pipeMap = [res for res in f.split('\n')]
-placeholder = 9999
+placeholder = 1e5
 pathMap = [[placeholder] * len(pipeMap[0]) for _ in range(len(pipeMap))]
 d = {'-':[(0,-1),(0,1)],'|':[(1,0),(-1,0)],'7':[(1,0),(0,-1)],'F':[(1,0),(0,1)],'J':[(-1,0),(0,-1)],'L':[(-1,0),(0,1)],'S':[],'*':[],'/':[],'.':[]}
 
+# Find initial S
 sy,sx = 0,0
 for i,l in enumerate(pipeMap):
     for j,e in enumerate(l):
@@ -77,6 +78,7 @@ for y,x in openList:
     pathMap[y][x] = 1
 closedList = [(sy,sx)]
 
+# create pathMap
 while len(openList) > 0:
     y,x = openList.pop()
     cost = pathMap[y][x]+1
@@ -91,46 +93,76 @@ while len(openList) > 0:
 # SDF = np.zeros((len(pathMap),len(pathMap[0])),dtype=str)
 SDF = np.full((len(pathMap),len(pathMap[0])),'*',dtype=str)
 
+# Insert pipes into SDF
 for i,l in enumerate(pathMap):
     for j,e in enumerate(l):
         if e != placeholder:
             SDF[i,j] = pipeMap[i][j]
 
+# Replace initial S
 for i,l in enumerate(SDF):
     for j,e in enumerate(l):
         if e == 'S':
             SDF[i,j] = replaceS(i,j,d,SDF)
 
-for i,l in enumerate(SDF):
-    for j,e in enumerate(l):
-        if SDF[i][j-1] in ['J','7','|'] and SDF[i][j] in ['F','|','L']:
+# Insert column spaces
+for i in range(len(SDF[0])-2,-1,-1):
+    rc = [a[i+1] for a in SDF]
+    lc = [a[i] for a in SDF]
+    for rv,lv in zip(rc,lc):
+        if rv in ['F','|','L'] and lv in ['J','7','|']:
             a = ['S' for _ in range(len(SDF))]
             # a[0] = '.'
             # a[-1] = '.'
-            SDF = np.insert(SDF,j,a,axis=1)
+            SDF = np.insert(SDF,i+1,a,axis=1)
+            break
 
-for i,l in enumerate(SDF):
-    for j,e in enumerate(l):
-        if SDF[i-1][j] in ['L','J','-'] and SDF[i][j] in ['-','7','F']:
-            a = ['S' for _ in range(len(SDF[0]))]
-            # a[0] = '.'
-            # a[-1] = '.'
-            SDF = np.insert(SDF,i,a,axis=0)
-
-SDF = np.pad(SDF,1,constant_values='/')
-
+# Add boundary
+SDF = np.pad(SDF,1,constant_values='.')
+# Replace all inserted S
 for i,l in enumerate(SDF):
     for j,e in enumerate(l):
         if e == 'S':
             SDF[i,j] = replaceS(i,j,d,SDF)
 
+# # Insert row spaces
+# for i,l in enumerate(SDF):
+#     for j,e in enumerate(l):
+#         if SDF[i-1][j] in ['L','J','-'] and SDF[i][j] in ['-','7','F']:
+#             a = ['S' for _ in range(len(SDF[0]))]
+#             # a[0] = '.'
+#             # a[-1] = '.'
+#             SDF = np.insert(SDF,i,a,axis=0)
 
+# Insert row spaces
+for i in range(len(SDF)-2,-1,-1):
+    br = SDF[i+1]
+    tr = SDF[i]
+    for tv,bv in zip(tr,br):
+        if tv in ['L','J','-'] and bv in ['-','7','F']:
+            a = ['S' for _ in range(len(SDF[0]))]
+            # a[0] = '.'
+            # a[-1] = '.'
+            SDF = np.insert(SDF,i+1,a,axis=0)
+            break
+
+# Add boundary
+SDF = np.pad(SDF,1,constant_values='/')
+
+# Replace all inserted S
+for i,l in enumerate(SDF):
+    for j,e in enumerate(l):
+        if e == 'S':
+            SDF[i,j] = replaceS(i,j,d,SDF)
+
+# Find all potential pocket locations
 stars = []
 for i,l in enumerate(SDF):
     for j,e in enumerate(l):
         if e == '*':
             stars.append((i,j))
 
+# Compute pockets
 for sy,sx in stars:
     openList = [(sy,sx)]
     closedList = []
@@ -151,17 +183,21 @@ for sy,sx in stars:
             else:
                 continue
 
+# Replace pipes with X
 for i,l in enumerate(SDF):
     for j,e in enumerate(l):
         if e in ['-','|','L','J','F','7']:
             SDF[i,j] = 'X'
 print(SDF)
 
+# Count pockets
 res = 0
 for i,l in enumerate(SDF):
     for j,e in enumerate(l):
         if e == 'I':
             res += 1
+
+# Draw map to out.txt
 with open('./out.txt','w') as f:
     for l in SDF:
         for e in l:
