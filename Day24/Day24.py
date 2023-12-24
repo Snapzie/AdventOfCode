@@ -6,7 +6,12 @@ arr = np.array(list(map(lambda x: [[int(i) for i in x[0].split(', ')],[int(j) fo
 pos = arr[:,0,:2]
 velo = arr[:,1,:2]
 
-coords = [(a,[a[0]+(b[0]*27),a[1]+(b[1]*27)]) for a,b in zip(pos,velo)]
+top = 400000000000000
+bottom = 200000000000000
+# top = 27
+# bottom = 7
+
+coords = [(a,[a[0]+(b[0]*top*10),a[1]+(b[1]*top*10)]) for a,b in zip(pos,velo)]
 posVelo = [(a,b) for a,b in zip(pos,velo)]
 
 def intersection(l1,l2):
@@ -26,17 +31,23 @@ def intersection(l1,l2):
 res = 0
 for i,l1 in enumerate(coords[:-1]):
     for j,l2 in enumerate(coords[i+1:]):
+        # if l1[0][0] == l2[0][0] and l1[0][1] == l2[0][1] and l1[1][0] == l2[1][0] and l1[1][1] == l2[1][1]:
+        #     res += 1
+        #     continue
         int_x,int_y = intersection(l1,l2)
-        if (200000000000000 <= int_x <= 400000000000000) and (200000000000000 <= int_y <= 400000000000000):
-        # if (7 <= int_x <= 27) and (7 <= int_y <= 27):
-            # print(posVelo[i][0][0],posVelo[i][0][1])
-            # print(posVelo[i][1][0],posVelo[i][1][1])
+        if (bottom <= int_x <= top) and (bottom <= int_y <= top):
             if (posVelo[i][0][0] < int_x and posVelo[i][1][0] < 0) or (posVelo[i][0][0] > int_x and posVelo[i][1][0] > 0):# or (posVelo[i][0][1] < int_y and posVelo[i][1][1] < 0) or (posVelo[i][0][1] > int_y and posVelo[i][1][1] > 0):
                 continue
-            if (posVelo[j+i][0][0] < int_x and posVelo[j+i][1][0] < 0) or (posVelo[j+i][0][0] > int_x and posVelo[j+i][1][0] > 0):# or (posVelo[j+i][0][1] < int_y and posVelo[j+i][1][1] < 0) or (posVelo[j+i][0][1] > int_y and posVelo[j+i][1][1] > 0):
+            if (posVelo[j+i+1][0][0] < int_x and posVelo[j+i+1][1][0] < 0) or (posVelo[j+i+1][0][0] > int_x and posVelo[j+i+1][1][0] > 0):# or (posVelo[j+i][0][1] < int_y and posVelo[j+i][1][1] < 0) or (posVelo[j+i][0][1] > int_y and posVelo[j+i][1][1] > 0):
                 continue
             res += 1
 print(res)
 
 # 7921 - low
 # 17464 - low
+# 22000 - high
+# 17465 - %
+
+
+
+# 44850 - max
