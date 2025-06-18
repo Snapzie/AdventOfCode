@@ -1,7 +1,7 @@
 instructions = list(map(int,open('input.txt').read().split(',')))
 
 pointer = 0
-A = 117440
+A = 190384113204239
 B = 0
 C = 0
 
