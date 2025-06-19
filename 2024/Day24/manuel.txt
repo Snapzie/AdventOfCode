@@ -1,0 +1,99 @@
+S_int = A XOR B
+C_int = A AND B
+S = S_int XOR C_in
+C_out = C_int OR (S_int AND C_in)
+
+
+y33 AND x33 -> dgr
+y33 XOR x33 -> vvm
+vvm OR vtc -> wrd
+dgr AND rrd -> vtc
+dgr XOR rrd -> z33
+(dgr,vvm)
+
+
+vkb XOR jfk -> mtj
+wbg OR mtj -> gdv
+y29 AND x29 -> wbg
+jfk AND vkb -> z29
+(mtj,z29)
+
+
+bkj XOR fhq -> dtv
+wjd OR dtv -> jkb
+bkj AND fhq -> wjd
+y37 XOR x37 -> bkj
+x37 AND y37 -> z37
+(dtv,z37)
+
+
+fgc XOR whc -> z13
+jmr AND qts -> fsf (S_int AND C_in)
+jmr XOR qts -> fgc
+fsf OR nqs -> z12
+(fgc,z12)
+
+dgr,vvm,mtj,z29,dtv,z37,fgc,z12
+dgr,dtv,fgc,mtj,vvm,z12,z29,z37
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gdf XOR bqr -> z40
+
+
+
+hbg XOR rwk -> z41
+
+
+
+kjp XOR nmj -> z42
+
+
+
+drs XOR cvg -> z43 (S)
+
+y44 XOR x44 -> nww (S_int)
+gwc OR tdb -> nfm (C_out)
+nww XOR nfm -> z44 (S)
+
+y44 AND x44 -> wpb (C_int)
+nfm AND nww -> fbj (S_int AND C_in)
+wpb OR fbj -> z45 (C_out)

@@ -62,3 +62,12 @@ for i,(x,y,z) in enumerate(zip(bits_x,bits_y,bits_z)):
     if x+y == 0 and z != 0:
         print(f'i: {i}: {x},{y},{z}')
                         
+
+# x00 ^ y00 = z00
+# x00 & y00 = njb
+# x01 ^ y01 = tkb
+# x01 & y01 = vjw
+# njb ^ tkb = z01
+# tkb & njb = hfp
+# x02 ^ y02 = vvh
+# x02 & y02 = qhs
